@@ -1,0 +1,41 @@
+name: Enrich Data
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule: 
+    - cron: "0 */12 * * *" 
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.9'
+        architecture: 'x64'
+    - name: Install Jupyter
+      run: |
+        pip install jupyter
+        pip install -r requirements.txt 
+        wget https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-{2002..2022}.json.zip 
+        unzip -o "*.zip" 
+        wget https://epss.cyentia.com/epss_scores-current.csv.gz
+        gzip -d epss_scores-current.csv.gz   
+    - name: Run Notebook
+      env:
+        GH_TOKEN:  ${{ secrets.GH_TOKEN }}
+      run: |
+         jupyter nbconvert --to notebook --execute epss_enriched.ipynb
+         jupyter nbconvert --to html --TemplateExporter.exclude_input=True --no-prompt epss_enriched.nbconvert.ipynb --output index.html
+         rm index.html
+         rm epss_enriched.nbconvert.ipynb 
+    - name: Commit Changes
+      uses: EndBug/add-and-commit@v4
+      with:
+        author_name: Jerry Gamblin
+        message: "Update CVE Reports"
+        add: "."
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
