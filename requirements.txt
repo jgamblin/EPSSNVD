@@ -1,5 +1,6 @@
-pandas
-requests
 ipython
 matplotlib
 numpy
+pandas
+calplot
+plotly
