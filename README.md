@@ -17,7 +17,7 @@ The data they provide is minimal, so I have built this jupyter notebook to enric
 - Description
 - Published
 
-A Github Action runs every 6 hours and updates the following files:
+A Github Action runs every 12 hours and updates the following files:
 
 - [epss_enriched.csv](epss_enriched.csv)
 - [epss_enriched.json](epss_enriched.json)
