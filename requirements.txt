@@ -1,2 +1,5 @@
 pandas
 requests
+ipython
+matplotlib
+numpy
